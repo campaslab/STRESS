@@ -1,0 +1,108 @@
+README FOR DROPLET CODE, BEN J. Gross, Feb 18, 2021:
+
+In the file: Output_For_MATLAB.mat, the following fields are output:
+
+'Drop_Indicies_Used':
+This is a list of each frame number (zero-indexed) analyzed. Frames with poor shape resolution are skipped.
+
+'H0_From_Area_Int':
+This is a list of the average curvature on the droplet surface at each frame. This is computed from using a suface integral of the curvature on the droplet.
+
+'Number_of_Segmeted_Pts_Input':
+This is the number of points segmented by the MATLAB code at each frame. We use the segmented points to create a global shape approximation
+
+'Volume_Estimates_of_Droplets':
+We use a volume integral on the droplet shape (in spherical coordinates) to calculate the volume of the droplet in cubic microns at each frame.
+
+'Gauss_Bonnet_Integral_Test':
+For each frame, we compute the integral of the gaussian curvature on the surface, to see the relative error of this calculation with the theoretical value of 4\pi. This is used to test how well our basis caputures the droplet shape. This is the criterion we use to filter out bad frames in our analysis, if this metric is too high.
+
+'Anis_Stress_Drop_Inter_Percentile_Range':
+We compute the total stress anistropy on each frame, between the \alpha perctile and the 1-\alpha percentile. Here \alpha is the value entered by the user to run the code.
+
+(*)'Anis_Stress_Cells_Inter_Percentile_Range':
+We compute the cell stress anistropy on each frame, between the \alpha perctile and the 1-\alpha percentile. Here \alpha is the value entered by the user to run the code.
+
+(*)'Max_Anis_Stress_LS_Ellipsoid':
+We compute the tissue stress anistropy on each frame, between the \alpha perctile and the 1-\alpha percentile. Here \alpha is the value entered by the user to run the code.
+
+'Abs_Cos_Orientation_w_Final_Axis':
+For each frame we look at the angle between the major axes of ellipsoidal fit of the final frame, and the major axes of the ellipsoidal fit of the current frame. We compute the absolute value of the cosine of this angle. 
+
+'abs_cos_e_1_x_hat_Over_Time':
+For each frame we look at the angle between the x-axis, and the major axes of the ellipsoidal fit of the current frame. We compute the absolute value of the cosine of this angle. 
+
+'abs_cos_e_1_y_hat_Over_Time':
+For each frame we look at the angle between the y-axis, and the major axes of the ellipsoidal fit of the current frame. We compute the absolute value of the cosine of this angle. 
+
+'abs_cos_e_1_z_hat_Over_Time':
+For each frame we look at the angle between the z-axis, and the major axes of the ellipsoidal fit of the current frame. We compute the absolute value of the cosine of this angle. 
+
+'Tissue_Stress_x_proj_Over_Time':
+We project the maximum anisotropy in tissue stress (from the ellipsoidal fit major axes) onto the x-axis, at each frame.
+
+'Tissue_Stress_y_proj_Over_Time':
+We project the maximum anisotropy in tissue stress (from the ellipsoidal fit major axes) onto the y-axis, at each frame.
+
+'Tissue_Stress_z_proj_Over_Time':
+We project the maximum anisotropy in tissue stress (from the ellipsoidal fit major axes) onto the z-axis, at each frame.
+
+'LS_Ellps_axes_vecs':
+This provides the length of the (3) ellipsoid axes at each time frame, in microns.
+
+'LS_Ellps_Inv_Rot_mats':
+This provides the (3x3) rotation transformation for the ellipsoidal axes (from the cartesian xyz-coordinates in microns), at each frame.
+
+'LS_Ellps_center_vecs':
+This provides the coordinates of the center of the ellipsoid (in the cartesian xyz-coordinates in microns) at each frame.
+
+'Tension_gamma_val':
+We report the input intefacial tension (IFT) of the droplet used in our code (in mN/m). This is assumed to be the same for all frames.
+
+'Pixel_Size_Microns':
+This is the size of the xy-pixels in microns. We use this to convert to a coordinate system representing the droplet in microns. This value is assumed to be the same for all frames.
+
+'Temporal_Corrs_AnisStress_Rad':
+This measures the temporal correlations of between the different time-steps in the total stress values on the droplet surface.
+
+'Temporal_Corrs_Cell_Stress_Rad':
+This measures the temporal correlations of between the different time-steps in the cellular stress values on the droplet surface.
+
+'Temporal_Corrs_Tissue_Stress_Rad':
+This measures the temporal correlations of between the different time-steps in the tissue-level stress values on the droplet surface.
+
+'Spatial_Corrs_dists_list':
+This provides a list of distances (in microns) on the droplet surface at which spatial correlations are calcuated for total stress, at each frame.
+
+'Spatial_Normed_Corrs_corrs_list':
+This provides a list of correlations (at the above distances) of the spatial correlations in total stress, for each frame.
+
+'Spatial_Corrs_labels_list':
+Labels (frame number) for each droplet frame are provided, as labels for the spatial correlations above.
+
+'Cell_Corrs_dists_list':
+This provides a list of distances (in microns) on the droplet surface at which spatial correlations are calcuated for cell stress, at each frame.
+
+'Spatial_Normed_Cell_Corrs_corrs_list':
+This provides a list of distances (in microns) on the droplet surface at which spatial correlations are calcuated for cell stress, at each frame.
+
+'Tiss_Corrs_dists_list':
+This provides a list of distances (in microns) on the droplet surface at which spatial correlations are calcuated for tissue stress, at each frame.
+
+'Spatial_Normed_Tissue_Corrs_corrs_list':
+This provides a list of distances (in microns) on the droplet surface at which spatial correlations are calcuated for tissue stress, at each frame.
+
+If a reference coordinate is added:
+
+(*)'Neha_angle_deg_rad_e1_Over_Time':
+At each frame we compute the angle between the major axis of the Least-Squares Ellipsoid fit to the droplet, and the radial vector from the input reference point to the input droplet center. This is measured in degrees, and falls between 0 and 90.
+
+'Neha_abs_cos_btw_rad_e1_Over_Time':
+At each frame we compute the cosine of the above angle (for projections we may wish to calculate).
+
+(*)'Neha_rad_Dist_from_EK_Over_Time':
+At each frame we compute the distance in microns between the input reference coordinate and the input droplet center.
+
+(*) 'Neha_DropCent_to_EK_vecs':
+At each frame, we record the vector (in xyz coordinates) that points from the enamel knot to the droplet center.
+
