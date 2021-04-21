@@ -173,52 +173,55 @@ class Batch_Droplet_Class_Analysis(object):
 
 						## DO PLOTS on Single Drop Data ##:
 						
-						# only look at upper triangular part, since this is symetric:
-						Upper_Tri_ESE_true_sph_coef_mat = np.triu(Drop_i.ESE_true_sph_coef_mat + np.triu(Drop_i.ESE_true_sph_coef_mat, k=1))
-						Normalized_UpperTr_Coefs = plts.Plot_Matrix_Heatmap_Linear_Adj("Drop 0 Upper Triangular Ellipsoidal Deviation Contributions", Upper_Tri_ESE_true_sph_coef_mat, 0., Only_Upper_Tri=True, Input_Dir=Output_Dir)
-						
-						# flip for plotting:
-						Flipped_UT_mat = np.zeros_like(Upper_Tri_ESE_true_sph_coef_mat)
-						for col_j in range(Drop_i.deg_fit_ESE + 1):
-							for row_i in range(col_j+1):
-								Flipped_UT_mat[row_i, col_j] = Upper_Tri_ESE_true_sph_coef_mat[col_j-row_i, col_j]
+						# we make this a try/except, so that plotting errors dont stop code:
+						try:
+							# only look at upper triangular part, since this is symetric:
+							Upper_Tri_ESE_true_sph_coef_mat = np.triu(Drop_i.ESE_true_sph_coef_mat + np.triu(Drop_i.ESE_true_sph_coef_mat, k=1))
+							Normalized_UpperTr_Coefs = plts.Plot_Matrix_Heatmap_Linear_Adj("Drop 0 Upper Triangular Ellipsoidal Deviation Contributions", Upper_Tri_ESE_true_sph_coef_mat, 0., Only_Upper_Tri=True, Input_Dir=Output_Dir)
+							
+							# flip for plotting:
+							Flipped_UT_mat = np.zeros_like(Upper_Tri_ESE_true_sph_coef_mat)
+							for col_j in range(Drop_i.deg_fit_ESE + 1):
+								for row_i in range(col_j+1):
+									Flipped_UT_mat[row_i, col_j] = Upper_Tri_ESE_true_sph_coef_mat[col_j-row_i, col_j]
 
-						plts.Plot_Matrix_Heatmap_Linear_Adj("FLIPPED Drop 0 Upper Triangular Ellipsoidal Deviation Contributions", Flipped_UT_mat, 0., Only_Upper_Tri=True, Input_Dir=Output_Dir)
+							plts.Plot_Matrix_Heatmap_Linear_Adj("FLIPPED Drop 0 Upper Triangular Ellipsoidal Deviation Contributions", Flipped_UT_mat, 0., Only_Upper_Tri=True, Input_Dir=Output_Dir)
 
-						Normalized_UpperTr_Coefs = Normalized_UpperTr_Coefs[np.triu_indices(Drop_i.deg_fit_ESE + 1)]
-						sorted_mode_contributions = np.sort( Normalized_UpperTr_Coefs.flatten() )[::-1]
-						plts.Plot_Histogram_CDF_ONLY("Drop 0 Ellipsoidal Deviation Mode Contributions", np.arange( ((Drop_i.deg_fit_ESE+1)*(Drop_i.deg_fit_ESE + 2))/2).flatten() +1, sorted_mode_contributions, Output_Dir)
+							Normalized_UpperTr_Coefs = Normalized_UpperTr_Coefs[np.triu_indices(Drop_i.deg_fit_ESE + 1)]
+							sorted_mode_contributions = np.sort( Normalized_UpperTr_Coefs.flatten() )[::-1]
+							plts.Plot_Histogram_CDF_ONLY("Drop 0 Ellipsoidal Deviation Mode Contributions", np.arange( ((Drop_i.deg_fit_ESE+1)*(Drop_i.deg_fit_ESE + 2))/2).flatten() +1, sorted_mode_contributions, Output_Dir)
 
-						# Histrograms on stress distributions:
-						plts.Plot_Histogram_PDF("Total Stress extrema pair distances ", Drop_i.nearest_min_max_dists_AnisStress[np.nonzero(Drop_i.nearest_min_max_dists_AnisStress)].flatten(), Output_Dir )
-						plts.Plot_Histogram_PDF("Total Stress extrema pair vals ", Drop_i.nearest_min_max_anisotropic_stress_AnisStress[np.nonzero(Drop_i.nearest_min_max_anisotropic_stress_AnisStress)].flatten(), Output_Dir )
+							# Histrograms on stress distributions:
+							plts.Plot_Histogram_PDF("Total Stress extrema pair distances ", Drop_i.nearest_min_max_dists_AnisStress[np.nonzero(Drop_i.nearest_min_max_dists_AnisStress)].flatten(), Output_Dir )
+							plts.Plot_Histogram_PDF("Total Stress extrema pair vals ", Drop_i.nearest_min_max_anisotropic_stress_AnisStress[np.nonzero(Drop_i.nearest_min_max_anisotropic_stress_AnisStress)].flatten(), Output_Dir )
 
-						plts.Plot_Histogram_PDF("Total Stress ALL pair distances ", Drop_i.ALL_min_max_dists_AnisStress.flatten(), Output_Dir )
-						plts.Plot_Histogram_PDF("Total Stress extrema ALL pair vals ", Drop_i.ALL_min_max_anisotropies_AnisStress.flatten(), Output_Dir )
+							plts.Plot_Histogram_PDF("Total Stress ALL pair distances ", Drop_i.ALL_min_max_dists_AnisStress.flatten(), Output_Dir )
+							plts.Plot_Histogram_PDF("Total Stress extrema ALL pair vals ", Drop_i.ALL_min_max_anisotropies_AnisStress.flatten(), Output_Dir )
 
-						plts.Plot_Histogram_PDF("Cell Stress extrema pair distances ", Drop_i.nearest_min_max_dists_AnisCellStress[np.nonzero(Drop_i.nearest_min_max_dists_AnisCellStress)].flatten(), Output_Dir )
-						plts.Plot_Histogram_PDF("Cell Stress extrema pair vals ", Drop_i.nearest_min_max_anisotropic_stress_AnisCellStress[np.nonzero(Drop_i.nearest_min_max_anisotropic_stress_AnisCellStress)].flatten(), Output_Dir )
+							plts.Plot_Histogram_PDF("Cell Stress extrema pair distances ", Drop_i.nearest_min_max_dists_AnisCellStress[np.nonzero(Drop_i.nearest_min_max_dists_AnisCellStress)].flatten(), Output_Dir )
+							plts.Plot_Histogram_PDF("Cell Stress extrema pair vals ", Drop_i.nearest_min_max_anisotropic_stress_AnisCellStress[np.nonzero(Drop_i.nearest_min_max_anisotropic_stress_AnisCellStress)].flatten(), Output_Dir )
 
-						plts.Plot_Histogram_PDF("Cell Stress extrema ALL pair distances ", Drop_i.ALL_min_max_dists_AnisCellStress.flatten(), Output_Dir )
-						plts.Plot_Histogram_PDF("Cell Stress extrema ALL pair vals ", Drop_i.ALL_min_max_anisotropies_AnisCellStress.flatten(), Output_Dir )
+							plts.Plot_Histogram_PDF("Cell Stress extrema ALL pair distances ", Drop_i.ALL_min_max_dists_AnisCellStress.flatten(), Output_Dir )
+							plts.Plot_Histogram_PDF("Cell Stress extrema ALL pair vals ", Drop_i.ALL_min_max_anisotropies_AnisCellStress.flatten(), Output_Dir )
 
-						# scatter plot of all pairs, with anisoptopies against distance:
-						plts.SimpleScatterPlot("Total Stress All local min max pair anisotropies vs pair distances", Drop_i.ALL_min_max_dists_AnisStress.flatten(),  Drop_i.ALL_min_max_anisotropies_AnisStress.flatten(), "distances", "anisotropies", plot_type = 'x', plot_dir=Output_Dir)
-						plts.SimpleScatterPlot("Cell Stress local min max pair anisotropies vs pair distances", Drop_i.ALL_min_max_dists_AnisCellStress.flatten(), Drop_i.ALL_min_max_anisotropies_AnisCellStress.flatten(), "distances", "anisotropies", plot_type = 'x', plot_dir=Output_Dir)
+							# scatter plot of all pairs, with anisoptopies against distance:
+							plts.SimpleScatterPlot("Total Stress All local min max pair anisotropies vs pair distances", Drop_i.ALL_min_max_dists_AnisStress.flatten(),  Drop_i.ALL_min_max_anisotropies_AnisStress.flatten(), "distances", "anisotropies", plot_type = 'x', plot_dir=Output_Dir)
+							plts.SimpleScatterPlot("Cell Stress local min max pair anisotropies vs pair distances", Drop_i.ALL_min_max_dists_AnisCellStress.flatten(), Drop_i.ALL_min_max_anisotropies_AnisCellStress.flatten(), "distances", "anisotropies", plot_type = 'x', plot_dir=Output_Dir)
 
-						# sorted stress distibution:
-						sorted_total_stress = np.sort(Drop_i.Anis_Stress_pts_lbdv.flatten()) 
-						plts.plot_scalar_fields_over_time("total stress distribution", np.arange(Drop_i.num_lbdv_pts_fit).reshape(Drop_i.num_lbdv_pts_fit, 1), sorted_total_stress.reshape(Drop_i.num_lbdv_pts_fit, 1), ["Total Stress"], Input_Dir=Output_Dir)
+							# sorted stress distibution:
+							sorted_total_stress = np.sort(Drop_i.Anis_Stress_pts_lbdv.flatten()) 
+							plts.plot_scalar_fields_over_time("total stress distribution", np.arange(Drop_i.num_lbdv_pts_fit).reshape(Drop_i.num_lbdv_pts_fit, 1), sorted_total_stress.reshape(Drop_i.num_lbdv_pts_fit, 1), ["Total Stress"], Input_Dir=Output_Dir)
 
-						sorted_cell_stress = np.sort(Drop_i.Anis_Cell_Stress_pts_lbdv.flatten()) 
-						plts.plot_scalar_fields_over_time("cell stress distribution", np.arange(Drop_i.num_lbdv_pts_fit).reshape(Drop_i.num_lbdv_pts_fit, 1), sorted_cell_stress.reshape(Drop_i.num_lbdv_pts_fit, 1), ["Cell Stress"], Input_Dir=Output_Dir)
+							sorted_cell_stress = np.sort(Drop_i.Anis_Cell_Stress_pts_lbdv.flatten()) 
+							plts.plot_scalar_fields_over_time("cell stress distribution", np.arange(Drop_i.num_lbdv_pts_fit).reshape(Drop_i.num_lbdv_pts_fit, 1), sorted_cell_stress.reshape(Drop_i.num_lbdv_pts_fit, 1), ["Cell Stress"], Input_Dir=Output_Dir)
 
-						X_prob_TotalStress = np.linspace(sorted_total_stress[0], sorted_total_stress[-1], Drop_i.num_lbdv_pts_fit)
-						plts.Plot_Histograms("Total Stress Cutoff CDF", X_prob_TotalStress, Drop_i.hist_dist_Total_Stress_lbdv, sorted_total_stress, Drop_Anal_Input_Dict['alpha_percentile_excl_AnisStress'], Drop_i.min_val_excl_AnisStress, Drop_i.max_val_excl_AnisStress, Output_Dir)
+							X_prob_TotalStress = np.linspace(sorted_total_stress[0], sorted_total_stress[-1], Drop_i.num_lbdv_pts_fit)
+							plts.Plot_Histograms("Total Stress Cutoff CDF", X_prob_TotalStress, Drop_i.hist_dist_Total_Stress_lbdv, sorted_total_stress, Drop_Anal_Input_Dict['alpha_percentile_excl_AnisStress'], Drop_i.min_val_excl_AnisStress, Drop_i.max_val_excl_AnisStress, Output_Dir)
 
-						X_prob_CellStress = np.linspace(sorted_cell_stress[0], sorted_cell_stress[-1], Drop_i.num_lbdv_pts_fit)
-						plts.Plot_Histograms("Cell Stress Cutoff CDF", X_prob_CellStress, Drop_i.hist_dist_Cell_Stress_lbdv, sorted_cell_stress, Drop_Anal_Input_Dict['alpha_percentile_excl_AnisCellStress'], Drop_i.min_val_excl_AnisStress, Drop_i.max_val_excl_AnisCellStress, Output_Dir)
-						
+							X_prob_CellStress = np.linspace(sorted_cell_stress[0], sorted_cell_stress[-1], Drop_i.num_lbdv_pts_fit)
+							plts.Plot_Histograms("Cell Stress Cutoff CDF", X_prob_CellStress, Drop_i.hist_dist_Cell_Stress_lbdv, sorted_cell_stress, Drop_Anal_Input_Dict['alpha_percentile_excl_AnisCellStress'], Drop_i.min_val_excl_AnisStress, Drop_i.max_val_excl_AnisCellStress, Output_Dir)
+						except:
+							print("\n"+"ERROR: Issue found with individual frame plots"+"\n") 
 				else:
 					print("NOT USING: file_num = "+str(file_num)+", index = "+str(index)+", Gauss-Bonnet = "+str(Drop_i.Gauss_Bonnet_Rel_Err))	
 
@@ -511,158 +514,163 @@ class Batch_Droplet_Class_Analysis(object):
 		H0_From_avg_seg_pts = np.array(H0_From_avg_seg_pts, dtype=np.dtype('d'))
 
 
-		# plot num pts input from segmented data:
-		plts.plot_scalar_fields_over_time(" Seg Pts Input Over Time", array_of_indicies_used, Num_Dropets_Seg_Pts_Over_Time.reshape(Num_Drops, 1), ["Num Seg Pts"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir)
+		# We use a try/except here to make sure plotting errors don't prevent the data from being saved in a .mat file
+		try: 
+			# plot num pts input from segmented data:
+			plts.plot_scalar_fields_over_time(" Seg Pts Input Over Time", array_of_indicies_used, Num_Dropets_Seg_Pts_Over_Time.reshape(Num_Drops, 1), ["Num Seg Pts"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir)
 
-		# plot volumes:
-		plts.plot_scalar_fields_over_time(" Volume Over Time", array_of_indicies_used, Volumes_Measured_Over_Time.reshape(Num_Drops, 1), ["Drop Volumes"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir)
+			# plot volumes:
+			plts.plot_scalar_fields_over_time(" Volume Over Time", array_of_indicies_used, Volumes_Measured_Over_Time.reshape(Num_Drops, 1), ["Drop Volumes"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir)
 
-		# plot volumes with y_min = 0:
-		plts.plot_scalar_fields_over_time(" Volume Over Time (From V=0)", array_of_indicies_used, Volumes_Measured_Over_Time.reshape(Num_Drops, 1), ["Drop Volumes"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, y_lim_bottom_in=0.)
+			# plot volumes with y_min = 0:
+			plts.plot_scalar_fields_over_time(" Volume Over Time (From V=0)", array_of_indicies_used, Volumes_Measured_Over_Time.reshape(Num_Drops, 1), ["Drop Volumes"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, y_lim_bottom_in=0.)
 
-		# plot 2\gamma*(H - H0) Alpha percentile ranges:
-		plts.plot_scalar_fields_over_time(" Anis Stress Percentile Range Over Time", array_of_indicies_used, Anis_Stress_Alpha_Percentile_Dif_Over_Time.reshape(Num_Drops, 1), ["alpha = "+str(Drop_Anal_Input_Dict['alpha_percentile_excl_AnisStress'])], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
+			# plot 2\gamma*(H - H0) Alpha percentile ranges:
+			plts.plot_scalar_fields_over_time(" Anis Stress Percentile Range Over Time", array_of_indicies_used, Anis_Stress_Alpha_Percentile_Dif_Over_Time.reshape(Num_Drops, 1), ["alpha = "+str(Drop_Anal_Input_Dict['alpha_percentile_excl_AnisStress'])], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
 
-		# plot 2\gamma*(H-H_ellps) Alpha percentile ranges:
-		plts.plot_scalar_fields_over_time(" Anis Cell Stresses Alpha Percentile Range Over Time", array_of_indicies_used, AnisCellStress_Alpha_Percentile_Dif_Over_Time.reshape(Num_Drops, 1), ["alpha = "+str(Drop_Anal_Input_Dict['alpha_percentile_excl_AnisCellStress'])], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
+			# plot 2\gamma*(H-H_ellps) Alpha percentile ranges:
+			plts.plot_scalar_fields_over_time(" Anis Cell Stresses Alpha Percentile Range Over Time", array_of_indicies_used, AnisCellStress_Alpha_Percentile_Dif_Over_Time.reshape(Num_Drops, 1), ["alpha = "+str(Drop_Anal_Input_Dict['alpha_percentile_excl_AnisCellStress'])], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
 
-		# plot 2\gamma*(H_ellps_max - H_ellps_min) ranges:
-		plts.plot_scalar_fields_over_time(" Maximum Anisotropy in Ellipsoidal Stress Over Time", array_of_indicies_used, Anis_Stress_Ellps_Max_Difs_Over_Time.reshape(Num_Drops, 1), ["max. Ellps. Stress Ans."], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
+			# plot 2\gamma*(H_ellps_max - H_ellps_min) ranges:
+			plts.plot_scalar_fields_over_time(" Maximum Anisotropy in Ellipsoidal Stress Over Time", array_of_indicies_used, Anis_Stress_Ellps_Max_Difs_Over_Time.reshape(Num_Drops, 1), ["max. Ellps. Stress Ans."], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
 
-		# plot 2\gamma*(H(e_1) - H(e_3)) over time:
-		plts.plot_scalar_fields_over_time(" Anisotropy in Drop Stress in Ellipsoid Axes Extrema Over Time", array_of_indicies_used, Anis_Stress_Drop_Ellps_Axes_Over_Time.reshape(Num_Drops, 1), ["2\gamma (H[e_1] - H[e_3])"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
+			# plot 2\gamma*(H(e_1) - H(e_3)) over time:
+			plts.plot_scalar_fields_over_time(" Anisotropy in Drop Stress in Ellipsoid Axes Extrema Over Time", array_of_indicies_used, Anis_Stress_Drop_Ellps_Axes_Over_Time.reshape(Num_Drops, 1), ["2\gamma (H[e_1] - H[e_3])"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
 
-		hstacked_anis_stress_ellps_axes = np.hstack(( Anis_Stress_Drop_Ellps_Axes_Over_Time.reshape(Num_Drops, 1), Anis_Stress_Drop_Ellps_e1_e2_Over_Time.reshape(Num_Drops, 1), Anis_Stress_Drop_Ellps_e2_e3_Over_Time.reshape(Num_Drops, 1) ))
+			hstacked_anis_stress_ellps_axes = np.hstack(( Anis_Stress_Drop_Ellps_Axes_Over_Time.reshape(Num_Drops, 1), Anis_Stress_Drop_Ellps_e1_e2_Over_Time.reshape(Num_Drops, 1), Anis_Stress_Drop_Ellps_e2_e3_Over_Time.reshape(Num_Drops, 1) ))
 
-		max_anis_stress_ellps_axis_dir = max(hstacked_anis_stress_ellps_axes.flatten())
-		min_anis_stress_ellps_axis_dir = min(hstacked_anis_stress_ellps_axes.flatten())
+			max_anis_stress_ellps_axis_dir = max(hstacked_anis_stress_ellps_axes.flatten())
+			min_anis_stress_ellps_axis_dir = min(hstacked_anis_stress_ellps_axes.flatten())
 
-		# Plot a BUNCH of total anis stresses between ellipsoid axes dirs:
-		plts.plot_scalar_fields_over_time("Anis (Total) Stress along Ellps Axes Dirs Over Time", array_of_indicies_used, hstacked_anis_stress_ellps_axes, ["2\gamma (H[e_1] - H[e_3])", "2\gamma (H[e_1] - H[e_2])", "2\gamma (H[e_2] - H[e_3])"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'], y_lim_bottom_in=float(min_anis_stress_ellps_axis_dir), y_lim_top_in=float(max_anis_stress_ellps_axis_dir) )
-
-
-		# plot 2\gamma*(H_local_max-H_local_min) Alpha percentile ranges, for all pairs:
-		plts.plot_scalar_fields_over_time("All pairs: (Local Anis Stress Max minus Local Anis Stress Min) Alpha Percentile Range Over Time", array_of_indicies_used, All_AnisStressLocalMax_m_AnisStressLocalMin_Alpha_Percentile_Dif_Over_Time.reshape(Num_Drops, 1), ["alpha = "+str(Drop_Anal_Input_Dict['alpha_percentile_excl_AnisStressLocalMax_m_AnisStressLocalMin'])], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
-
-		# plot orientation wrt final axis:
-		plts.plot_scalar_fields_over_time(" Abs(cos) Major Axis Dot Prod. with Final", array_of_indicies_used, Abs_Cos_Orient_Over_Time.reshape(Num_Drops, 1), ["abs(cos) angle"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
-
-		# plot orientation wrt x axis:
-		plts.plot_scalar_fields_over_time(" Abs(cos) Major Axis Dot Prod. with x-axis", array_of_indicies_used, abs_cos_e_1_x_hat_Over_Time.reshape(Num_Drops, 1), ["abs(cos) angle"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
-
-		# plot ellps stress wrt x axis:
-		plts.plot_scalar_fields_over_time(" Proj Ellps Stress on x-axis", array_of_indicies_used, np.multiply(1. - abs_cos_e_1_x_hat_Over_Time, Anis_Stress_Ellps_Max_Difs_Over_Time).reshape(Num_Drops, 1), ["Stress"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
-
-		# plot orientation wrt y axis:
-		plts.plot_scalar_fields_over_time(" Abs(cos) Major Axis Dot Prod. with y-axis", array_of_indicies_used, abs_cos_e_1_y_hat_Over_Time.reshape(Num_Drops, 1), ["abs(cos) angle"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
-
-		# plot ellps stress wrt y axis:
-		plts.plot_scalar_fields_over_time(" Proj Ellps Stress on y-axis", array_of_indicies_used, np.multiply(1. - abs_cos_e_1_y_hat_Over_Time, Anis_Stress_Ellps_Max_Difs_Over_Time).reshape(Num_Drops, 1), ["Stress"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
-
-		# plot orientation wrt z axis:
-		plts.plot_scalar_fields_over_time(" Abs(cos) Major Axis Dot Prod. with z-axis", array_of_indicies_used, abs_cos_e_1_z_hat_Over_Time.reshape(Num_Drops, 1), ["abs(cos) angle"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
-
-		# plot ellps stress wrt z axis:
-		plts.plot_scalar_fields_over_time(" Proj Ellps Stress on z-axis", array_of_indicies_used, np.multiply(1. - abs_cos_e_1_z_hat_Over_Time, Anis_Stress_Ellps_Max_Difs_Over_Time).reshape(Num_Drops, 1), ["Stress"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
-
-		# Plot a BUNCH of ellps orientations together:
-		plts.plot_scalar_fields_over_time("Abs (cos) Major Axis Dot w axes Over Time", array_of_indicies_used, np.hstack((abs_cos_e_1_x_hat_Over_Time.reshape(Num_Drops, 1), abs_cos_e_1_y_hat_Over_Time.reshape(Num_Drops, 1), abs_cos_e_1_z_hat_Over_Time.reshape(Num_Drops, 1) )), ["x-axis", "y-axis", "z-axis"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'], y_lim_bottom_in=0., y_lim_top_in=1.)
-
-		#hstacked_ellps_stress_proj_on_axes = np.hstack(( np.multiply(1. - abs_cos_e_1_x_hat_Over_Time, Anis_Stress_Ellps_Max_Difs_Over_Time).reshape(Num_Drops, 1), np.multiply(1. - abs_cos_e_1_y_hat_Over_Time, Anis_Stress_Ellps_Max_Difs_Over_Time).reshape(Num_Drops, 1), np.multiply(1. - abs_cos_e_1_z_hat_Over_Time, Anis_Stress_Ellps_Max_Difs_Over_Time).reshape(Num_Drops, 1) ))
-
-		hstacked_ellps_stress_proj_on_axes = np.hstack(( Tissue_Stress_x_proj_Over_Time.reshape(Num_Drops, 1), Tissue_Stress_y_proj_Over_Time.reshape(Num_Drops, 1), Tissue_Stress_z_proj_Over_Time.reshape(Num_Drops, 1) ))
+			# Plot a BUNCH of total anis stresses between ellipsoid axes dirs:
+			plts.plot_scalar_fields_over_time("Anis (Total) Stress along Ellps Axes Dirs Over Time", array_of_indicies_used, hstacked_anis_stress_ellps_axes, ["2\gamma (H[e_1] - H[e_3])", "2\gamma (H[e_1] - H[e_2])", "2\gamma (H[e_2] - H[e_3])"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'], y_lim_bottom_in=float(min_anis_stress_ellps_axis_dir), y_lim_top_in=float(max_anis_stress_ellps_axis_dir) )
 
 
-		max_ells_stress = max(hstacked_ellps_stress_proj_on_axes.flatten())
-		min_ells_stress = min(hstacked_ellps_stress_proj_on_axes.flatten())
+			# plot 2\gamma*(H_local_max-H_local_min) Alpha percentile ranges, for all pairs:
+			plts.plot_scalar_fields_over_time("All pairs: (Local Anis Stress Max minus Local Anis Stress Min) Alpha Percentile Range Over Time", array_of_indicies_used, All_AnisStressLocalMax_m_AnisStressLocalMin_Alpha_Percentile_Dif_Over_Time.reshape(Num_Drops, 1), ["alpha = "+str(Drop_Anal_Input_Dict['alpha_percentile_excl_AnisStressLocalMax_m_AnisStressLocalMin'])], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
 
-		#list_of_ellps_stress_proj_on_axes = [ np.multiply(1. - abs_cos_e_1_x_hat_Over_Time, Anis_Stress_Ellps_Max_Difs_Over_Time), np.multiply(1. - abs_cos_e_1_y_hat_Over_Time, Anis_Stress_Ellps_Max_Difs_Over_Time), np.multiply(1. - abs_cos_e_1_z_hat_Over_Time, Anis_Stress_Ellps_Max_Difs_Over_Time) ]
-		list_of_ellps_stress_proj_on_axes = [ Tissue_Stress_x_proj_Over_Time, Tissue_Stress_y_proj_Over_Time, Tissue_Stress_z_proj_Over_Time ]
+			# plot orientation wrt final axis:
+			plts.plot_scalar_fields_over_time(" Abs(cos) Major Axis Dot Prod. with Final", array_of_indicies_used, Abs_Cos_Orient_Over_Time.reshape(Num_Drops, 1), ["abs(cos) angle"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
 
-		print("hstacked_ellps_stress_proj_on_axes = "+str(hstacked_ellps_stress_proj_on_axes))
-		print("list_of_ellps_stress_proj_on_axes = "+str(list_of_ellps_stress_proj_on_axes))
-		print("min_ells_stress = "+str(min_ells_stress))
-		print("max_ells_stress = "+str(max_ells_stress))
+			# plot orientation wrt x axis:
+			plts.plot_scalar_fields_over_time(" Abs(cos) Major Axis Dot Prod. with x-axis", array_of_indicies_used, abs_cos_e_1_x_hat_Over_Time.reshape(Num_Drops, 1), ["abs(cos) angle"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
 
-		# Plot a BUNCH of ellps proj stresses together:
-		plts.plot_scalar_fields_over_time("Proj Ellps Stress on axes Over Time", array_of_indicies_used, hstacked_ellps_stress_proj_on_axes, ["x-axis", "y-axis", "z-axis"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'], y_lim_bottom_in=min_ells_stress, y_lim_top_in=float(max_ells_stress) )
+			# plot ellps stress wrt x axis:
+			plts.plot_scalar_fields_over_time(" Proj Ellps Stress on x-axis", array_of_indicies_used, np.multiply(1. - abs_cos_e_1_x_hat_Over_Time, Anis_Stress_Ellps_Max_Difs_Over_Time).reshape(Num_Drops, 1), ["Stress"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
 
-		# Plot a BUNCH of ellps proj stresses together (List format):
-		plts.plot_scalar_fields_over_time_From_List("Proj Ellps Stress on axes (list) Over Time", [np.arange(Num_Drops), np.arange(Num_Drops), np.arange(Num_Drops)], list_of_ellps_stress_proj_on_axes, ["x-axis", "y-axis", "z-axis"], log=False, markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'], y_lim_bottom_in=min_ells_stress, y_lim_top_in=max_ells_stress)
+			# plot orientation wrt y axis:
+			plts.plot_scalar_fields_over_time(" Abs(cos) Major Axis Dot Prod. with y-axis", array_of_indicies_used, abs_cos_e_1_y_hat_Over_Time.reshape(Num_Drops, 1), ["abs(cos) angle"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
 
-		# Plot a BUNCH of angles in degrees together:
-		plts.plot_scalar_fields_over_time("Ellps major axes angles with axes Over Time", array_of_indicies_used, np.hstack(( (180./np.pi)*np.arccos(abs_cos_e_1_x_hat_Over_Time).reshape(Num_Drops, 1), (180./np.pi)*np.arccos(abs_cos_e_1_y_hat_Over_Time).reshape(Num_Drops, 1),  (180./np.pi)*np.arccos(abs_cos_e_1_z_hat_Over_Time).reshape(Num_Drops, 1) )), ["x-axis", "y-axis", "z-axis"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'], y_lim_bottom_in=0., y_lim_top_in=90.)
+			# plot ellps stress wrt y axis:
+			plts.plot_scalar_fields_over_time(" Proj Ellps Stress on y-axis", array_of_indicies_used, np.multiply(1. - abs_cos_e_1_y_hat_Over_Time, Anis_Stress_Ellps_Max_Difs_Over_Time).reshape(Num_Drops, 1), ["Stress"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
 
-		# Plot a BUNCH of angles in pi/2 radians together:
-		plts.plot_scalar_fields_over_time("Ellps major axes angles (ADJ) with axes Over Time", array_of_indicies_used, np.hstack(( (2./np.pi)*np.arccos(abs_cos_e_1_x_hat_Over_Time).reshape(Num_Drops, 1), (2./np.pi)*np.arccos(abs_cos_e_1_y_hat_Over_Time).reshape(Num_Drops, 1),  (2./np.pi)*np.arccos(abs_cos_e_1_z_hat_Over_Time).reshape(Num_Drops, 1) )), ["x-axis", "y-axis", "z-axis"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'], y_lim_bottom_in=0., y_lim_top_in=1.)
+			# plot orientation wrt z axis:
+			plts.plot_scalar_fields_over_time(" Abs(cos) Major Axis Dot Prod. with z-axis", array_of_indicies_used, abs_cos_e_1_z_hat_Over_Time.reshape(Num_Drops, 1), ["abs(cos) angle"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
 
+			# plot ellps stress wrt z axis:
+			plts.plot_scalar_fields_over_time(" Proj Ellps Stress on z-axis", array_of_indicies_used, np.multiply(1. - abs_cos_e_1_z_hat_Over_Time, Anis_Stress_Ellps_Max_Difs_Over_Time).reshape(Num_Drops, 1), ["Stress"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
 
-		# plot Neha angle with e_1 axis:
-		if(Drop_Anal_Input_Dict['Neha_Radial_analysis'] == True):
-			plts.plot_scalar_fields_over_time(" abs(Neha dot prod of e_1 with radial Reference Coordinate Center)", array_of_indicies_used, Neha_abs_cos_btw_rad_e1_Over_Time.reshape(Num_Drops, 1), ["abs(cos) angle"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
+			# Plot a BUNCH of ellps orientations together:
+			plts.plot_scalar_fields_over_time("Abs (cos) Major Axis Dot w axes Over Time", array_of_indicies_used, np.hstack((abs_cos_e_1_x_hat_Over_Time.reshape(Num_Drops, 1), abs_cos_e_1_y_hat_Over_Time.reshape(Num_Drops, 1), abs_cos_e_1_z_hat_Over_Time.reshape(Num_Drops, 1) )), ["x-axis", "y-axis", "z-axis"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'], y_lim_bottom_in=0., y_lim_top_in=1.)
 
-			plts.plot_scalar_fields_over_time(" Neha Droplet Rad Distance From Reference Coordinate Center", array_of_indicies_used, Neha_Drop_rad_Dist_EK.reshape(Num_Drops, 1), ["abs(cos) angle"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
+			#hstacked_ellps_stress_proj_on_axes = np.hstack(( np.multiply(1. - abs_cos_e_1_x_hat_Over_Time, Anis_Stress_Ellps_Max_Difs_Over_Time).reshape(Num_Drops, 1), np.multiply(1. - abs_cos_e_1_y_hat_Over_Time, Anis_Stress_Ellps_Max_Difs_Over_Time).reshape(Num_Drops, 1), np.multiply(1. - abs_cos_e_1_z_hat_Over_Time, Anis_Stress_Ellps_Max_Difs_Over_Time).reshape(Num_Drops, 1) ))
 
-
-		# plot gauss-bonnet conv test:
-		plts.plot_scalar_fields_over_time(" Gauss-Bonnet Conv. Test", array_of_indicies_used, Gauss_Bonnet_Test_Over_Time.reshape(Num_Drops, 1), ["rel. err."], log=True, markersize = 1., plot_type = 'o-', plot_dir = Output_Dir)
-
-		# Examine how H0_surface (from Integral) differs from H0_Ellps, used to calculate cell stresses:
-		plts.plot_scalar_fields_over_time(" H0 minus H0_ellps", array_of_indicies_used, H0_lbdv_surf_minus_Ellps_Over_Time.reshape(Num_Drops, 1), ["H0 - H0_ellps"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
-
-		## Plot ELIJAH (INPUT FIELDS): ##
-
-		# plot 2\gamma*(H_INPUT - H0_INPUT) Alpha percentile ranges:
-		plts.plot_scalar_fields_over_time(" Anis Stress (INPUT) Percentile Range Over Time", array_of_indicies_used, Anis_Stress_Input_Alpha_Percentile_Dif_Over_Time.reshape(Num_Drops, 1), ["alpha = "+str(Drop_Anal_Input_Dict['alpha_percentile_excl_AnisStress'])], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
-
-		# plot 2\gamma*(H_INPUT-H_ellps_INPUT) Alpha percentile ranges:
-		plts.plot_scalar_fields_over_time(" Anis Cell Stresses (INPUT) Alpha Percentile Range Over Time", array_of_indicies_used, AnisCellStress_Input_Alpha_Percentile_Dif_Over_Time.reshape(Num_Drops, 1), ["alpha = "+str(Drop_Anal_Input_Dict['alpha_percentile_excl_AnisCellStress'])], markersize = .2, plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
+			hstacked_ellps_stress_proj_on_axes = np.hstack(( Tissue_Stress_x_proj_Over_Time.reshape(Num_Drops, 1), Tissue_Stress_y_proj_Over_Time.reshape(Num_Drops, 1), Tissue_Stress_z_proj_Over_Time.reshape(Num_Drops, 1) ))
 
 
-		# Plot Spatial Coors, for EACH timestep from lists:
-		plts.plot_scalar_fields_over_time_From_List("Spatial Corrs Over Time", Spatial_Corrs_dists_list, Spatial_Corrs_corrs_list, Spatial_Corrs_labels_list, log=False, markersize = .2, plot_type = 'o-', plot_dir = Output_Dir, bspline=False)
+			max_ells_stress = max(hstacked_ellps_stress_proj_on_axes.flatten())
+			min_ells_stress = min(hstacked_ellps_stress_proj_on_axes.flatten())
 
-		# Plot NORMED Spatial Coors, for EACH timestep from lists:
-		plts.plot_scalar_fields_over_time_From_List("Spatial NORMED Corrs Over Time", Spatial_Corrs_dists_list, Spatial_Normed_Corrs_corrs_list, Spatial_Corrs_labels_list, log=False, markersize = .2, plot_type = 'o-', plot_dir = Output_Dir, bspline=False, y_lim_bottom_in=-1., y_lim_top_in=1.)
+			#list_of_ellps_stress_proj_on_axes = [ np.multiply(1. - abs_cos_e_1_x_hat_Over_Time, Anis_Stress_Ellps_Max_Difs_Over_Time), np.multiply(1. - abs_cos_e_1_y_hat_Over_Time, Anis_Stress_Ellps_Max_Difs_Over_Time), np.multiply(1. - abs_cos_e_1_z_hat_Over_Time, Anis_Stress_Ellps_Max_Difs_Over_Time) ]
+			list_of_ellps_stress_proj_on_axes = [ Tissue_Stress_x_proj_Over_Time, Tissue_Stress_y_proj_Over_Time, Tissue_Stress_z_proj_Over_Time ]
 
-		# Plot NORMED Spatial Cellular Coors, for EACH timestep from lists:
-		plts.plot_scalar_fields_over_time_From_List("Spatial NORMED Cell Corrs Over Time",Cell_Corrs_dists_list, Spatial_Normed_Cell_Corrs_corrs_list, Spatial_Corrs_labels_list, log=False, markersize = .2, plot_type = 'o-', plot_dir = Output_Dir, bspline=False, y_lim_bottom_in=-1., y_lim_top_in=1.)
+			print("hstacked_ellps_stress_proj_on_axes = "+str(hstacked_ellps_stress_proj_on_axes))
+			print("list_of_ellps_stress_proj_on_axes = "+str(list_of_ellps_stress_proj_on_axes))
+			print("min_ells_stress = "+str(min_ells_stress))
+			print("max_ells_stress = "+str(max_ells_stress))
 
-		# Plot NORMED Spatial Cellular Coors, for EACH timestep from lists:
-		plts.plot_scalar_fields_over_time_From_List("Spatial NORMED Tissue Corrs Over Time", Tiss_Corrs_dists_list, Spatial_Normed_Tissue_Corrs_corrs_list, Spatial_Corrs_labels_list, log=False, markersize = .2, plot_type = 'o-', plot_dir = Output_Dir, bspline=False, y_lim_bottom_in=-1., y_lim_top_in=1.)
+			# Plot a BUNCH of ellps proj stresses together:
+			plts.plot_scalar_fields_over_time("Proj Ellps Stress on axes Over Time", array_of_indicies_used, hstacked_ellps_stress_proj_on_axes, ["x-axis", "y-axis", "z-axis"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'], y_lim_bottom_in=min_ells_stress, y_lim_top_in=float(max_ells_stress) )
 
+			# Plot a BUNCH of ellps proj stresses together (List format):
+			plts.plot_scalar_fields_over_time_From_List("Proj Ellps Stress on axes (list) Over Time", [np.arange(Num_Drops), np.arange(Num_Drops), np.arange(Num_Drops)], list_of_ellps_stress_proj_on_axes, ["x-axis", "y-axis", "z-axis"], log=False, markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'], y_lim_bottom_in=min_ells_stress, y_lim_top_in=max_ells_stress)
 
-		# plot gauss-bonnet conv test:
-		plts.plot_scalar_fields_over_time(" Gauss-Bonnet Radial Conv. Test", array_of_indicies_used, Gauss_Bonnet_Rad_Test_Over_Time.reshape(Num_Drops, 1), ["rel. err."], log=True, markersize = 1., plot_type = 'o-', plot_dir = Output_Dir)
+			# Plot a BUNCH of angles in degrees together:
+			plts.plot_scalar_fields_over_time("Ellps major axes angles with axes Over Time", array_of_indicies_used, np.hstack(( (180./np.pi)*np.arccos(abs_cos_e_1_x_hat_Over_Time).reshape(Num_Drops, 1), (180./np.pi)*np.arccos(abs_cos_e_1_y_hat_Over_Time).reshape(Num_Drops, 1),  (180./np.pi)*np.arccos(abs_cos_e_1_z_hat_Over_Time).reshape(Num_Drops, 1) )), ["x-axis", "y-axis", "z-axis"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'], y_lim_bottom_in=0., y_lim_top_in=90.)
 
-		# plot avg diff in error from H_lbdv, H_Rad_lbdv:
-		plts.plot_scalar_fields_over_time("H lbdv vs H_Rad Err. Test", array_of_indicies_used, H_lbdv_vs_H_Rad_Over_Time.reshape(Num_Drops, 1), ["avg diff."], log=True, markersize = 1., plot_type = 'o-', plot_dir = Output_Dir)
-
-		# Temporal Corrs in total stress, from Radial Coors:
-		plts.plot_scalar_fields_over_time(" Temporal Corrs from Radial lbdv coors", array_of_indicies_used, Temporal_Corrs_AnisStress_Rad.reshape(Num_Drops, 1), ["temp corr tau"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=False, y_lim_bottom_in=-1., y_lim_top_in=1.)
-
-		# Temporal Corrs in cellular stress, from Radial Coors:
-		plts.plot_scalar_fields_over_time(" Temporal Corrs Cell Stress (Radial lbdv coors)", array_of_indicies_used, Temporal_Corrs_Cell_Stress_Rad.reshape(Num_Drops, 1), ["temp corr tau"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=False, y_lim_bottom_in=-1., y_lim_top_in=1.)
-
-		# Temporal Corrs in tissue stress, from Radial Coors:
-		plts.plot_scalar_fields_over_time(" Temporal Corrs Tissue Stress (Radial lbdv coors)", array_of_indicies_used, Temporal_Corrs_Tissue_Stress_Rad.reshape(Num_Drops, 1), ["temp corr tau"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=False, y_lim_bottom_in=-1., y_lim_top_in=1.)
+			# Plot a BUNCH of angles in pi/2 radians together:
+			plts.plot_scalar_fields_over_time("Ellps major axes angles (ADJ) with axes Over Time", array_of_indicies_used, np.hstack(( (2./np.pi)*np.arccos(abs_cos_e_1_x_hat_Over_Time).reshape(Num_Drops, 1), (2./np.pi)*np.arccos(abs_cos_e_1_y_hat_Over_Time).reshape(Num_Drops, 1),  (2./np.pi)*np.arccos(abs_cos_e_1_z_hat_Over_Time).reshape(Num_Drops, 1) )), ["x-axis", "y-axis", "z-axis"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'], y_lim_bottom_in=0., y_lim_top_in=1.)
 
 
-		# Plot a BUNCH of fields together:
-		plts.plot_scalar_fields_over_time("Stress Comparisons Over Time", array_of_indicies_used, np.hstack((Anis_Stress_Alpha_Percentile_Dif_Over_Time.reshape(Num_Drops, 1), AnisCellStress_Alpha_Percentile_Dif_Over_Time.reshape(Num_Drops, 1), Anis_Stress_Ellps_Max_Difs_Over_Time.reshape(Num_Drops, 1) )), ["2\gamma(H - H_0): alpha = "+str(Drop_Anal_Input_Dict['alpha_percentile_excl_AnisStress']), "2\gamma(H - H_e) : alpha = "+str(Drop_Anal_Input_Dict['alpha_percentile_excl_AnisCellStress']), "max. Ellps. Stress Ans."], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
+			# plot Neha angle with e_1 axis:
+			if(Drop_Anal_Input_Dict['Neha_Radial_analysis'] == True):
+				plts.plot_scalar_fields_over_time(" abs(Neha dot prod of e_1 with radial Reference Coordinate Center)", array_of_indicies_used, Neha_abs_cos_btw_rad_e1_Over_Time.reshape(Num_Drops, 1), ["abs(cos) angle"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
 
-		# Plot a BUNCH of INPUT fields together:
-		plts.plot_scalar_fields_over_time("Stress (INPUTS) Comparisons Over Time", array_of_indicies_used, np.hstack((Anis_Stress_Input_Alpha_Percentile_Dif_Over_Time.reshape(Num_Drops, 1), AnisCellStress_Input_Alpha_Percentile_Dif_Over_Time.reshape(Num_Drops, 1), Anis_Stress_Ellps_Max_Difs_Over_Time.reshape(Num_Drops, 1) )), ["2\gamma(H_in - H_0_in): alpha = "+str(Drop_Anal_Input_Dict['alpha_percentile_excl_AnisStress']), "2\gamma(H_in - H_e) : alpha = "+str(Drop_Anal_Input_Dict['alpha_percentile_excl_AnisCellStress']), "max. Ellps. Stress Ans."], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
+				plts.plot_scalar_fields_over_time(" Neha Droplet Rad Distance From Reference Coordinate Center", array_of_indicies_used, Neha_Drop_rad_Dist_EK.reshape(Num_Drops, 1), ["abs(cos) angle"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
 
-		# Plot a BUNCH of Gauss-Bonnet Test fields together:
-		plts.plot_scalar_fields_over_time("Comparing Gauss-Bonnet Tests", array_of_indicies_used, np.hstack((Gauss_Bonnet_Test_Over_Time.reshape(Num_Drops, 1), Gauss_Bonnet_Rad_Test_Over_Time.reshape(Num_Drops, 1) )), ["lbdv ellps coors", "lbdv rad coors"], log=True, markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=False)
 
-		# Plot a BUNCH of H0 vals together:
-		plts.plot_scalar_fields_over_time("H0 Comparisons Over Time", array_of_indicies_used, np.hstack((H0_From_Vol_Int.reshape(Num_Drops, 1), H0_From_Area_Int.reshape(Num_Drops, 1), H0_From_Ellipsoid.reshape(Num_Drops, 1), H0_From_avg_lbdv_pts.reshape(Num_Drops, 1), H0_From_avg_seg_pts.reshape(Num_Drops, 1) )), ["H0_From_Vol_Int", "H0_From_Area_Int", "H0_From_Ellipsoid", "H0_From_avg_lbdv_pts", "H0_From_avg_seg_pts"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=False)
+			# plot gauss-bonnet conv test:
+			plts.plot_scalar_fields_over_time(" Gauss-Bonnet Conv. Test", array_of_indicies_used, Gauss_Bonnet_Test_Over_Time.reshape(Num_Drops, 1), ["rel. err."], log=True, markersize = 1., plot_type = 'o-', plot_dir = Output_Dir)
 
-		# same, but scale to y_lim_bottom_in=0.:
-		plts.plot_scalar_fields_over_time("H0 Comparisons Over Time (from 0)", array_of_indicies_used, np.hstack((H0_From_Vol_Int.reshape(Num_Drops, 1), H0_From_Area_Int.reshape(Num_Drops, 1), H0_From_Ellipsoid.reshape(Num_Drops, 1), H0_From_avg_lbdv_pts.reshape(Num_Drops, 1), H0_From_avg_seg_pts.reshape(Num_Drops, 1) )), ["H0_From_Vol_Int", "H0_From_Area_Int", "H0_From_Ellipsoid", "H0_From_avg_lbdv_pts", "H0_From_avg_seg_pts"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=False, y_lim_bottom_in=0.)
+			# Examine how H0_surface (from Integral) differs from H0_Ellps, used to calculate cell stresses:
+			plts.plot_scalar_fields_over_time(" H0 minus H0_ellps", array_of_indicies_used, H0_lbdv_surf_minus_Ellps_Over_Time.reshape(Num_Drops, 1), ["H0 - H0_ellps"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
 
+			## Plot ELIJAH (INPUT FIELDS): ##
+
+			# plot 2\gamma*(H_INPUT - H0_INPUT) Alpha percentile ranges:
+			plts.plot_scalar_fields_over_time(" Anis Stress (INPUT) Percentile Range Over Time", array_of_indicies_used, Anis_Stress_Input_Alpha_Percentile_Dif_Over_Time.reshape(Num_Drops, 1), ["alpha = "+str(Drop_Anal_Input_Dict['alpha_percentile_excl_AnisStress'])], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
+
+			# plot 2\gamma*(H_INPUT-H_ellps_INPUT) Alpha percentile ranges:
+			plts.plot_scalar_fields_over_time(" Anis Cell Stresses (INPUT) Alpha Percentile Range Over Time", array_of_indicies_used, AnisCellStress_Input_Alpha_Percentile_Dif_Over_Time.reshape(Num_Drops, 1), ["alpha = "+str(Drop_Anal_Input_Dict['alpha_percentile_excl_AnisCellStress'])], markersize = .2, plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
+
+
+			# Plot Spatial Coors, for EACH timestep from lists:
+			plts.plot_scalar_fields_over_time_From_List("Spatial Corrs Over Time", Spatial_Corrs_dists_list, Spatial_Corrs_corrs_list, Spatial_Corrs_labels_list, log=False, markersize = .2, plot_type = 'o-', plot_dir = Output_Dir, bspline=False)
+
+			# Plot NORMED Spatial Coors, for EACH timestep from lists:
+			plts.plot_scalar_fields_over_time_From_List("Spatial NORMED Corrs Over Time", Spatial_Corrs_dists_list, Spatial_Normed_Corrs_corrs_list, Spatial_Corrs_labels_list, log=False, markersize = .2, plot_type = 'o-', plot_dir = Output_Dir, bspline=False, y_lim_bottom_in=-1., y_lim_top_in=1.)
+
+			# Plot NORMED Spatial Cellular Coors, for EACH timestep from lists:
+			plts.plot_scalar_fields_over_time_From_List("Spatial NORMED Cell Corrs Over Time",Cell_Corrs_dists_list, Spatial_Normed_Cell_Corrs_corrs_list, Spatial_Corrs_labels_list, log=False, markersize = .2, plot_type = 'o-', plot_dir = Output_Dir, bspline=False, y_lim_bottom_in=-1., y_lim_top_in=1.)
+
+			# Plot NORMED Spatial Cellular Coors, for EACH timestep from lists:
+			plts.plot_scalar_fields_over_time_From_List("Spatial NORMED Tissue Corrs Over Time", Tiss_Corrs_dists_list, Spatial_Normed_Tissue_Corrs_corrs_list, Spatial_Corrs_labels_list, log=False, markersize = .2, plot_type = 'o-', plot_dir = Output_Dir, bspline=False, y_lim_bottom_in=-1., y_lim_top_in=1.)
+
+
+			# plot gauss-bonnet conv test:
+			plts.plot_scalar_fields_over_time(" Gauss-Bonnet Radial Conv. Test", array_of_indicies_used, Gauss_Bonnet_Rad_Test_Over_Time.reshape(Num_Drops, 1), ["rel. err."], log=True, markersize = 1., plot_type = 'o-', plot_dir = Output_Dir)
+
+			# plot avg diff in error from H_lbdv, H_Rad_lbdv:
+			plts.plot_scalar_fields_over_time("H lbdv vs H_Rad Err. Test", array_of_indicies_used, H_lbdv_vs_H_Rad_Over_Time.reshape(Num_Drops, 1), ["avg diff."], log=True, markersize = 1., plot_type = 'o-', plot_dir = Output_Dir)
+
+			# Temporal Corrs in total stress, from Radial Coors:
+			plts.plot_scalar_fields_over_time(" Temporal Corrs from Radial lbdv coors", array_of_indicies_used, Temporal_Corrs_AnisStress_Rad.reshape(Num_Drops, 1), ["temp corr tau"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=False, y_lim_bottom_in=-1., y_lim_top_in=1.)
+
+			# Temporal Corrs in cellular stress, from Radial Coors:
+			plts.plot_scalar_fields_over_time(" Temporal Corrs Cell Stress (Radial lbdv coors)", array_of_indicies_used, Temporal_Corrs_Cell_Stress_Rad.reshape(Num_Drops, 1), ["temp corr tau"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=False, y_lim_bottom_in=-1., y_lim_top_in=1.)
+
+			# Temporal Corrs in tissue stress, from Radial Coors:
+			plts.plot_scalar_fields_over_time(" Temporal Corrs Tissue Stress (Radial lbdv coors)", array_of_indicies_used, Temporal_Corrs_Tissue_Stress_Rad.reshape(Num_Drops, 1), ["temp corr tau"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=False, y_lim_bottom_in=-1., y_lim_top_in=1.)
+
+
+			# Plot a BUNCH of fields together:
+			plts.plot_scalar_fields_over_time("Stress Comparisons Over Time", array_of_indicies_used, np.hstack((Anis_Stress_Alpha_Percentile_Dif_Over_Time.reshape(Num_Drops, 1), AnisCellStress_Alpha_Percentile_Dif_Over_Time.reshape(Num_Drops, 1), Anis_Stress_Ellps_Max_Difs_Over_Time.reshape(Num_Drops, 1) )), ["2\gamma(H - H_0): alpha = "+str(Drop_Anal_Input_Dict['alpha_percentile_excl_AnisStress']), "2\gamma(H - H_e) : alpha = "+str(Drop_Anal_Input_Dict['alpha_percentile_excl_AnisCellStress']), "max. Ellps. Stress Ans."], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
+
+			# Plot a BUNCH of INPUT fields together:
+			plts.plot_scalar_fields_over_time("Stress (INPUTS) Comparisons Over Time", array_of_indicies_used, np.hstack((Anis_Stress_Input_Alpha_Percentile_Dif_Over_Time.reshape(Num_Drops, 1), AnisCellStress_Input_Alpha_Percentile_Dif_Over_Time.reshape(Num_Drops, 1), Anis_Stress_Ellps_Max_Difs_Over_Time.reshape(Num_Drops, 1) )), ["2\gamma(H_in - H_0_in): alpha = "+str(Drop_Anal_Input_Dict['alpha_percentile_excl_AnisStress']), "2\gamma(H_in - H_e) : alpha = "+str(Drop_Anal_Input_Dict['alpha_percentile_excl_AnisCellStress']), "max. Ellps. Stress Ans."], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=Drop_Anal_Input_Dict['smoothBSpline'])
+
+			# Plot a BUNCH of Gauss-Bonnet Test fields together:
+			plts.plot_scalar_fields_over_time("Comparing Gauss-Bonnet Tests", array_of_indicies_used, np.hstack((Gauss_Bonnet_Test_Over_Time.reshape(Num_Drops, 1), Gauss_Bonnet_Rad_Test_Over_Time.reshape(Num_Drops, 1) )), ["lbdv ellps coors", "lbdv rad coors"], log=True, markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=False)
+
+			# Plot a BUNCH of H0 vals together:
+			plts.plot_scalar_fields_over_time("H0 Comparisons Over Time", array_of_indicies_used, np.hstack((H0_From_Vol_Int.reshape(Num_Drops, 1), H0_From_Area_Int.reshape(Num_Drops, 1), H0_From_Ellipsoid.reshape(Num_Drops, 1), H0_From_avg_lbdv_pts.reshape(Num_Drops, 1), H0_From_avg_seg_pts.reshape(Num_Drops, 1) )), ["H0_From_Vol_Int", "H0_From_Area_Int", "H0_From_Ellipsoid", "H0_From_avg_lbdv_pts", "H0_From_avg_seg_pts"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=False)
+
+			# same, but scale to y_lim_bottom_in=0.:
+			plts.plot_scalar_fields_over_time("H0 Comparisons Over Time (from 0)", array_of_indicies_used, np.hstack((H0_From_Vol_Int.reshape(Num_Drops, 1), H0_From_Area_Int.reshape(Num_Drops, 1), H0_From_Ellipsoid.reshape(Num_Drops, 1), H0_From_avg_lbdv_pts.reshape(Num_Drops, 1), H0_From_avg_seg_pts.reshape(Num_Drops, 1) )), ["H0_From_Vol_Int", "H0_From_Area_Int", "H0_From_Ellipsoid", "H0_From_avg_lbdv_pts", "H0_From_avg_seg_pts"], markersize = 1., plot_type = 'o-', plot_dir = Output_Dir, bspline=False, y_lim_bottom_in=0.)
+
+		except:
+			print("\n"+"ERROR: Issue found with time-sequence plots"+"\n")
+			
 		# Save .mat file output, so it can be read in MATLAB:
 		Dict_for_Matfile = {}
 		#! NAMES CANNOT HAVE SPACES !#:
