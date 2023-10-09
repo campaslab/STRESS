@@ -49,7 +49,7 @@ def Domain_Unaffected(Theta, Phi): #Where fns in each chart arent affected by et
 
 def Bump_Fn(Eval_Pt, Max_Val, Start, Length): #can be evaluated on [start, start+Length)
 	X_2 = ((Eval_Pt-Start)/Length)**2	
-	return (Max_Val*e)*e**(-1/(1-X_2)) 
+	return (Max_Val*np.e)*np.e**(-1/(1-X_2)) 
 	# B(E) = Me*e^(-1/(1-((E-S)/L)^2))
 
 	###!! Linear Cutoff !!###
