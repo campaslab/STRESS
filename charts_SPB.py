@@ -1,6 +1,7 @@
 #from numpy  import *
 import numpy as np
 from scipy  import *
+from numpy import e
 import mpmath
 import cmath
 from scipy.special import sph_harm
